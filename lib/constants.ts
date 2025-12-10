@@ -8,6 +8,7 @@ export const SITE_NAME = 'AI Work Tracker';
 export const SITE_NAME_MULTILINE = ['AI Work', 'Tracker'];
 export const META_DESCRIPTION = 'AI 驱动的工作行为监控与日志生成系统，帮助你追踪工作时间并自动生成工作报告';
 export const SITE_DESCRIPTION = '智能追踪你的工作，自动生成日报';
+export const TWITTER_USER_NAME = process.env.NEXT_PUBLIC_TWITTER_USER_NAME || '';
 
 // 截屏配置
 export const SCREENSHOT_INTERVAL_MS = 5000; // 5秒截屏一次

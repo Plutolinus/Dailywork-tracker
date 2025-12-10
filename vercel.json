@@ -3,7 +3,7 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
-  "regions": ["hkg1", "sin1"],
+  "regions": ["hkg1"],
   "functions": {
     "pages/api/**/*.ts": {
       "maxDuration": 60

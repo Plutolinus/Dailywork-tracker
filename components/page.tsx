@@ -39,6 +39,7 @@ export default function Page({ meta, children, fullViewport = false }: Props) {
   const title = meta.title || SITE_NAME;
   const url = meta.url || `${SITE_URL}${router.asPath}`;
   const description = meta.description || SITE_NAME;
+  const twitterHandle = TWITTER_USER_NAME ? `@${TWITTER_USER_NAME}` : null;
 
   return (
     <div className={cn('page-container', { full: fullViewport })}>
@@ -48,7 +49,7 @@ export default function Page({ meta, children, fullViewport = false }: Props) {
         <meta property="og:url" content={url} />
         <meta name="description" content={description} />
         <meta property="og:description" content={description} />
-        <meta name="twitter:site" content={`@${TWITTER_USER_NAME}`} />
+        {twitterHandle && <meta name="twitter:site" content={twitterHandle} />}
         <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

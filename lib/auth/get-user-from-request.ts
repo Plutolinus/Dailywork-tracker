@@ -3,13 +3,30 @@
  */
 
 import { NextApiRequest } from 'next';
-import { parse } from 'cookie';
 import { getCurrentUser } from './index';
 import { User } from '@lib/types';
 
+/**
+ * 简单解析 cookie 字符串
+ */
+function parseCookies(cookieHeader: string): Record<string, string> {
+  const cookies: Record<string, string> = {};
+  if (!cookieHeader) return cookies;
+  
+  cookieHeader.split(';').forEach(cookie => {
+    const [name, ...rest] = cookie.split('=');
+    if (name) {
+      const value = rest.join('=');
+      cookies[name.trim()] = decodeURIComponent(value.trim());
+    }
+  });
+  
+  return cookies;
+}
+
 export async function getUserFromRequest(req: NextApiRequest): Promise<User | null> {
   try {
-    const cookies = parse(req.headers.cookie || '');
+    const cookies = parseCookies(req.headers.cookie || '');
     const token = cookies.auth_token;
 
     if (!token) {

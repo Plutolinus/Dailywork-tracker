@@ -6,7 +6,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from '@lib/auth';
 import { ApiResponse, User } from '@lib/types';
-import { parse } from 'cookie';
+import { parse } from '@lib/utils/cookie';
 
 export default async function handler(
   req: NextApiRequest,

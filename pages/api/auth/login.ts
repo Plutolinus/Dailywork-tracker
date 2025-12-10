@@ -6,7 +6,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { login } from '@lib/auth';
 import { ApiResponse, AuthResponse } from '@lib/types';
-import { serialize } from 'cookie';
+import { serialize } from '@lib/utils/cookie';
 
 export default async function handler(
   req: NextApiRequest,

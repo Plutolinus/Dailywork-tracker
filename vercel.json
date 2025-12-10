@@ -1,9 +1,8 @@
 {
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
+  "installCommand": "pnpm install --ignore-scripts",
   "framework": "nextjs",
-  "regions": ["hkg1", "sin1"],
   "functions": {
     "pages/api/**/*.ts": {
       "maxDuration": 60

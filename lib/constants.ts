@@ -1,73 +1,42 @@
 /**
- * Copyright 2020 Vercel Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * AI Work Tracker - Constants
  */
 
-export const SITE_URL = 'https://demo.vercel.events';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 export const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN || new URL(SITE_URL).origin;
-export const TWITTER_USER_NAME = 'vercel';
-export const BRAND_NAME = 'ACME';
-export const SITE_NAME_MULTILINE = ['ACME', 'Conf'];
-export const SITE_NAME = 'ACME Conf';
-export const META_DESCRIPTION =
-  'This is an open source demo that Next.js developers can clone, deploy, and fully customize for events. Created through collaboration of marketers, designers, and developers at Vercel.';
-export const SITE_DESCRIPTION =
-  'An interactive online experience by the community, free for everyone.';
-export const DATE = '01 January 2022';
-export const SHORT_DATE = 'Jan 1 - 9:00am PST';
-export const FULL_DATE = 'Jan 1st 9am Pacific Time (GMT-7)';
-export const TWEET_TEXT = META_DESCRIPTION;
-export const COOKIE = 'user-id';
+export const SITE_NAME = 'AI Work Tracker';
+export const SITE_NAME_MULTILINE = ['AI Work', 'Tracker'];
+export const META_DESCRIPTION = 'AI 驱动的工作行为监控与日志生成系统，帮助你追踪工作时间并自动生成工作报告';
+export const SITE_DESCRIPTION = '智能追踪你的工作，自动生成日报';
 
-// Remove process.env.NEXT_PUBLIC_... below and replace them with
-// strings containing your own privacy policy URL and copyright holder name
-export const LEGAL_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL;
-export const COPYRIGHT_HOLDER = process.env.NEXT_PUBLIC_COPYRIGHT_HOLDER;
+// 截屏配置
+export const SCREENSHOT_INTERVAL_MS = 5000; // 5秒截屏一次
+export const MAX_SCREENSHOTS_PER_SESSION = 10000;
 
-export const CODE_OF_CONDUCT =
-  'https://www.notion.so/vercel/Code-of-Conduct-Example-7ddd8d0e9c354bb597a0faed87310a78';
-export const REPO = 'https://github.com/vercel/virtual-event-starter-kit';
-export const SAMPLE_TICKET_NUMBER = 1234;
+// 导航菜单
 export const NAVIGATION = [
   {
-    name: 'Live Stage',
-    route: '/stage/a'
+    name: '仪表盘',
+    route: '/'
   },
   {
-    name: 'Vercel Stage',
-    route: '/stage/c'
+    name: '时间线',
+    route: '/timeline'
   },
   {
-    name: '100ms Stage',
-    route: '/stage/m'
-  },
-  {
-    name: 'Schedule',
-    route: '/schedule'
-  },
-  {
-    name: 'Speakers',
-    route: '/speakers'
-  },
-  {
-    name: 'Expo',
-    route: '/expo'
-  },
-  {
-    name: 'Jobs',
-    route: '/jobs'
+    name: '工作报告',
+    route: '/reports'
   }
 ];
 
-export type TicketGenerationState = 'default' | 'loading';
+// 活动类型
+export const ACTIVITY_TYPES = [
+  { value: 'coding', label: '编程开发', color: '#10b981' },
+  { value: 'browsing', label: '网页浏览', color: '#3b82f6' },
+  { value: 'documentation', label: '文档阅读', color: '#8b5cf6' },
+  { value: 'communication', label: '沟通协作', color: '#f59e0b' },
+  { value: 'meeting', label: '会议', color: '#ec4899' },
+  { value: 'design', label: '设计', color: '#06b6d4' },
+  { value: 'entertainment', label: '娱乐', color: '#ef4444' },
+  { value: 'other', label: '其他', color: '#6b7280' }
+];

@@ -1,76 +1,120 @@
 /**
- * Copyright 2020 Vercel Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * AI Work Tracker - Database API
+ * 统一的数据库访问层
  */
-import { ConfUser } from '@lib/types';
-import { SAMPLE_TICKET_NUMBER } from '@lib/constants';
 
-import * as redisApi from './db-providers/redis';
 import * as supabaseApi from './db-providers/supabase';
+import {
+  WorkSession,
+  Screenshot,
+  ScreenshotAnalysis,
+  WorkReport,
+  DashboardStats,
+  TimelineItem
+} from './types';
 
-let dbApi: {
-  createUser: (id: string, email: string) => Promise<ConfUser>;
-  getUserByUsername: (username: string) => Promise<ConfUser>;
-  getUserById: (id: string) => Promise<ConfUser>;
-  getTicketNumberByUserId: (id: string) => Promise<string | null>;
-  createGitHubUser: (user: any) => Promise<string>;
-  updateUserWithGitHubUser: (id: string, token: string, ticketNumber: string) => Promise<ConfUser>;
-};
+// ==================== 会话管理 ====================
 
-if (process.env.REDIS_PORT && process.env.REDIS_URL && process.env.EMAIL_TO_ID_SECRET) {
-  dbApi = redisApi;
-} else if (
-  process.env.SUPABASE_URL &&
-  process.env.SUPABASE_SERVICE_ROLE_SECRET &&
-  process.env.EMAIL_TO_ID_SECRET
-) {
-  dbApi = supabaseApi;
-} else {
-  dbApi = {
-    createUser: () => Promise.resolve({ ticketNumber: SAMPLE_TICKET_NUMBER }),
-    getUserByUsername: () => Promise.resolve({ ticketNumber: SAMPLE_TICKET_NUMBER }),
-    getUserById: () => Promise.resolve({ ticketNumber: SAMPLE_TICKET_NUMBER }),
-    getTicketNumberByUserId: () => Promise.resolve(null),
-    createGitHubUser: () => Promise.resolve(''),
-    updateUserWithGitHubUser: () => Promise.resolve({ ticketNumber: SAMPLE_TICKET_NUMBER })
-  };
+export async function createSession(userId?: string): Promise<WorkSession> {
+  return supabaseApi.createSession(userId);
 }
 
-export async function createUser(id: string, email: string): Promise<ConfUser> {
-  return dbApi.createUser(id, email);
+export async function getActiveSession(userId?: string): Promise<WorkSession | null> {
+  return supabaseApi.getActiveSession(userId);
 }
 
-export async function getUserByUsername(username: string): Promise<ConfUser> {
-  return dbApi.getUserByUsername(username);
-}
-
-export async function getUserById(id: string): Promise<ConfUser> {
-  return dbApi.getUserById(id);
-}
-
-export async function getTicketNumberByUserId(id: string): Promise<string | null> {
-  return dbApi.getTicketNumberByUserId(id);
-}
-
-export async function createGitHubUser(user: any): Promise<string> {
-  return dbApi.createGitHubUser(user);
-}
-
-export async function updateUserWithGitHubUser(
+export async function updateSessionStatus(
   id: string,
-  token: string,
-  ticketNumber: string
-): Promise<ConfUser> {
-  return dbApi.updateUserWithGitHubUser(id, token, ticketNumber);
+  status: WorkSession['status']
+): Promise<WorkSession> {
+  return supabaseApi.updateSessionStatus(id, status);
+}
+
+export async function getSession(id: string, userId?: string): Promise<WorkSession | null> {
+  return supabaseApi.getSession(id, userId);
+}
+
+export async function getSessions(limit?: number, userId?: string): Promise<WorkSession[]> {
+  return supabaseApi.getSessions(limit, userId);
+}
+
+// ==================== 截图管理 ====================
+
+export async function saveScreenshot(
+  sessionId: string,
+  filePath: string,
+  fileUrl?: string,
+  userId?: string,
+  imageHash?: string
+): Promise<Screenshot> {
+  return supabaseApi.saveScreenshot(sessionId, filePath, fileUrl, userId, imageHash);
+}
+
+export async function getScreenshots(sessionId: string): Promise<Screenshot[]> {
+  return supabaseApi.getScreenshots(sessionId);
+}
+
+export async function getScreenshot(id: string): Promise<Screenshot | null> {
+  return supabaseApi.getScreenshot(id);
+}
+
+export async function getRecentScreenshots(limit?: number, userId?: string): Promise<Screenshot[]> {
+  return supabaseApi.getRecentScreenshots(limit, userId);
+}
+
+// ==================== AI 分析管理 ====================
+
+export async function saveAnalysis(
+  screenshotId: string,
+  analysis: Omit<ScreenshotAnalysis, 'id' | 'screenshot_id' | 'created_at'>
+): Promise<ScreenshotAnalysis> {
+  return supabaseApi.saveAnalysis(screenshotId, analysis);
+}
+
+export async function getAnalysesBySession(sessionId: string): Promise<ScreenshotAnalysis[]> {
+  return supabaseApi.getAnalysesBySession(sessionId);
+}
+
+export async function copyAnalysisFromScreenshot(
+  sourceScreenshotId: string,
+  targetScreenshotId: string
+): Promise<void> {
+  return supabaseApi.copyAnalysisFromScreenshot(sourceScreenshotId, targetScreenshotId);
+}
+
+// ==================== 报告管理 ====================
+
+export async function saveReport(
+  report: Omit<WorkReport, 'id' | 'created_at'>,
+  userId?: string
+): Promise<WorkReport> {
+  return supabaseApi.saveReport(report, userId);
+}
+
+export async function getReport(id: string, userId?: string): Promise<WorkReport | null> {
+  return supabaseApi.getReport(id, userId);
+}
+
+export async function getReportBySession(sessionId: string, userId?: string): Promise<WorkReport | null> {
+  return supabaseApi.getReportBySession(sessionId, userId);
+}
+
+export async function getReports(limit?: number, userId?: string): Promise<WorkReport[]> {
+  return supabaseApi.getReports(limit, userId);
+}
+
+// ==================== 统计与时间线 ====================
+
+export async function getDashboardStats(userId?: string): Promise<DashboardStats> {
+  return supabaseApi.getDashboardStats(userId);
+}
+
+export async function getTimeline(sessionId: string): Promise<TimelineItem[]> {
+  return supabaseApi.getTimeline(sessionId);
+}
+
+// ==================== 存储 ====================
+
+export async function uploadScreenshot(file: Buffer, fileName: string): Promise<string> {
+  return supabaseApi.uploadScreenshot(file, fileName);
 }

@@ -1,74 +1,79 @@
-/**
- * Copyright 2020 Vercel Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/* Mobile Menu */
 
-.nav-overlay {
-  position: fixed;
-  z-index: 100;
-  top: 72px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: black;
-  display: flex;
+.btn {
+  display: none;
   align-items: center;
   justify-content: center;
-}
-
-.nav {
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.nav-item {
-  font-size: var(--space-8x);
-  letter-spacing: -0.05em;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: var(--space-4x);
-  line-height: 1.5;
-  width: fit-content;
-}
-
-.nav-item:focus {
-  outline: 1px dotted #fff;
-}
-
-.nav-active {
-  color: #fff;
-  background: linear-gradient(90deg, var(--brand), var(--brand)) left bottom transparent no-repeat;
-  background-size: 100% 2px;
-}
-
-.button {
-  margin: 0;
-  margin-right: var(--space-4x);
-  background: none;
+  width: 40px;
+  height: 40px;
+  background: transparent;
   border: none;
+  color: var(--text-main);
   cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--bg-card-hover);
 }
 
 .icon {
-  color: #fff;
-  display: block;
+  width: 24px;
+  height: 24px;
 }
 
-@media (min-width: 1032px) {
-  .button {
-    display: none;
+.menu {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideDown 0.3s ease-out;
+  z-index: 90;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.link {
+  display: block;
+  padding: 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  background: rgba(30, 41, 59, 0.3);
+}
+
+.link:hover {
+  color: var(--text-main);
+  background: var(--bg-card-hover);
+  transform: translateX(4px);
+}
+
+.active {
+  color: white;
+  background: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.active:hover {
+  background: var(--primary);
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .btn {
+    display: flex;
   }
 }

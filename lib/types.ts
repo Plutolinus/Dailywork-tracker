@@ -1,107 +1,144 @@
 /**
- * Copyright 2020 Vercel Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * AI Work Tracker - Type Definitions
  */
 
-export type Image = {
-  url: string;
-  blurDataURL?: string;
-};
-
-export type Speaker = {
-  name: string;
-  bio: string;
-  title: string;
-  slug: string;
-  twitter: string;
-  github: string;
-  company: string;
-  talk: Talk;
-  image: Image;
-  imageSquare: Image;
-};
-
-export type Stage = {
-  name: string;
-  slug: string;
-  stream: string;
-  discord: string;
-  schedule: Talk[];
-  isLive: boolean;
-  roomId: string;
-  stagePeers: string[];
-  backstagePeers: string[];
-};
-
-export type Talk = {
-  title: string;
-  description: string;
-  start: string;
-  end: string;
-  speaker: Speaker[];
-};
-
-export type Link = {
-  url: string;
-};
-
-export type Sponsor = {
-  name: string;
-  description: string;
-  slug: string;
-  website: string;
-  callToAction: string;
-  callToActionLink: string;
-  links: SponsorLink[];
-  discord: string;
-  tier: string;
-  cardImage: Image;
-  logo: Image;
-  youtubeSlug: string;
-};
-
-export type SponsorLink = {
-  text: string;
-  url: string;
-};
-
-export type Job = {
+// 工作会话
+export type WorkSession = {
   id: string;
-  companyName: string;
-  title: string;
+  started_at: string;
+  ended_at?: string;
+  status: 'active' | 'paused' | 'completed';
+  total_screenshots: number;
+  created_at: string;
+};
+
+// 截图记录
+export type Screenshot = {
+  id: string;
+  session_id: string;
+  file_path: string;
+  file_url?: string;
+  image_hash?: string;  // 图片 hash，用于判断是否重复
+  captured_at: string;
+  analysis?: ScreenshotAnalysis;
+  created_at: string;
+};
+
+// AI 分析结果
+export type ScreenshotAnalysis = {
+  id: string;
+  screenshot_id: string;
+  app_name: string;
+  activity_type: ActivityType;
   description: string;
-  discord: string;
-  link: string;
-  rank: number;
+  detailed_content?: string;  // 详细内容记录
+  tags: string[];
+  confidence: number;
+  raw_response?: string;
+  created_at: string;
 };
 
-export type ConfUser = {
-  id?: string;
-  email?: string;
-  ticketNumber?: number | null;
-  name?: string | null;
-  username?: string | null;
-  createdAt?: number | null;
+// 活动类型
+export type ActivityType =
+  | 'coding'
+  | 'browsing'
+  | 'documentation'
+  | 'communication'
+  | 'meeting'
+  | 'design'
+  | 'entertainment'
+  | 'other';
+
+// 工作报告
+export type WorkReport = {
+  id: string;
+  session_id: string;
+  summary: string;
+  highlights: string[];
+  time_breakdown: TimeBreakdown;
+  productivity_score: number;
+  suggestions: string[];
+  generated_at: string;
+  created_at: string;
 };
 
-export type GitHubOAuthData =
-  | {
-      type: 'token';
-      token: string;
-    }
-  | {
-      type: 'user';
-      name: string;
-      login: string;
-    };
+// 时间分配
+export type TimeBreakdown = {
+  [key in ActivityType]?: {
+    duration_minutes: number;
+    percentage: number;
+  };
+};
+
+// 仪表盘统计
+export type DashboardStats = {
+  today_duration_minutes: number;
+  today_screenshots: number;
+  today_productivity_score: number;
+  current_activity?: string;
+  active_session?: WorkSession;
+};
+
+// 时间线项
+export type TimelineItem = {
+  time: string;
+  screenshots: Screenshot[];
+  dominant_activity: ActivityType;
+  app_name: string;
+};
+
+// API 响应
+export type ApiResponse<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
+// Electron IPC 消息
+export type IPCMessage =
+  | { type: 'start-session' }
+  | { type: 'pause-session' }
+  | { type: 'resume-session' }
+  | { type: 'end-session' }
+  | { type: 'screenshot-captured'; data: { path: string; timestamp: string } }
+  | { type: 'session-status'; data: { status: WorkSession['status'] } };
+
+// ==================== 用户认证类型 ====================
+
+// 用户
+export type User = {
+  id: string;
+  username: string;
+  display_name?: string;
+  created_at: string;
+  updated_at: string;
+};
+
+// 用户会话
+export type UserSession = {
+  id: string;
+  user_id: string;
+  token: string;
+  expires_at: string;
+  created_at: string;
+};
+
+// 登录请求
+export type LoginRequest = {
+  username: string;
+  password: string;
+};
+
+// 注册请求
+export type RegisterRequest = {
+  username: string;
+  password: string;
+  display_name?: string;
+};
+
+// 认证响应
+export type AuthResponse = {
+  user: User;
+  token: string;
+  expires_at: string;
+};
